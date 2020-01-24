@@ -103,23 +103,23 @@ const cards = document.querySelector(".cards");
 axios
   .get("https://api.github.com/users/sundakat")
   .then(response => {
-    // console.log(response);
+    
     cards.append(cardCreator(response.data));
   })
   .catch(error => {
     console.log(error);
   });
 
-//
+
 axios
   .get("https://api.github.com/users/sundakat/followers")
   .then(response => {
-    // console.log(response);
+    
     response.data.forEach(follower => {
       axios
         .get(follower.url)
         .then(followerResponse => {
-          // console.log(followerResponse);
+          
           cards.append(cardCreator(followerResponse.data));
         })
         .catch(followerError => {
