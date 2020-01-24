@@ -46,6 +46,92 @@ const followersArray = [];
 
 */
 
+function cardCreator(obj) {
+  const card = document.createElement("div"),
+    cardImg = document.createElement("img"),
+    cardInfo = document.createElement("div"),
+    cardName = document.createElement("h3"),
+    cardUserName = document.createElement("p"),
+    cardLocation = document.createElement("p"),
+    cardProfile = document.createElement("p"),
+    cardProfileLink = document.createElement("a"),
+    cardFollowers = document.createElement("p"),
+    cardFollowing = document.createElement("p"),
+    cardBio = document.createElement("p");
+
+
+  card.append(cardImg);
+  card.append(cardInfo);
+  cardInfo.append(cardName);
+  cardInfo.append(cardUserName);
+  cardInfo.append(cardLocation);
+  cardInfo.append(cardProfile);
+  cardInfo.append(cardFollowers);
+  cardInfo.append(cardFollowing);
+  cardInfo.append(cardBio);
+
+  console.log(cardProfile);
+  console.log(cardProfileLink);
+
+  card.classList.add("card");
+  cardInfo.classList.add("card-info");
+  cardName.classList.add("name");
+  cardUserName.classList.add("username");
+
+  cardImg.src = obj.avatar_url;
+  cardName.textContent = obj.name;
+  cardUserName.textContent = obj.login;
+  cardLocation.textContent = `Location: ${obj.location}`;
+  cardProfileLink.href = obj.html_url;
+  cardProfileLink.textContent = obj.html_url;
+  cardProfile.textContent = "Profile: ";
+  cardFollowers.textContent = `Followers: ${obj.followers}`;
+  cardFollowing.textContent = `Following: ${obj.following}`;
+  cardBio.textContent = `Bio: ${obj.bio}`;
+
+  cardProfile.append(cardProfileLink);
+
+  console.log(card);
+
+  return card;
+}
+
+
+const cards = document.querySelector(".cards");
+
+
+axios
+  .get("https://api.github.com/users/sundakat")
+  .then(response => {
+    // console.log(response);
+    cards.append(cardCreator(response.data));
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+//
+axios
+  .get("https://api.github.com/users/sundakat/followers")
+  .then(response => {
+    // console.log(response);
+    response.data.forEach(follower => {
+      axios
+        .get(follower.url)
+        .then(followerResponse => {
+          // console.log(followerResponse);
+          cards.append(cardCreator(followerResponse.data));
+        })
+        .catch(followerError => {
+          console.log(followerError);
+        });
+    });
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+
 /* List of LS Instructors Github username's: 
   tetondan
   dustinmyers
